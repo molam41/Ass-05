@@ -4,7 +4,9 @@
 }
 .search-container p{
   display: none;
-  color:red;
+  color:tomato;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 #meals-container{
   display:grid;

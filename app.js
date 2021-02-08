@@ -1,12 +1,12 @@
 const searchItem = document.getElementById("searchedFood");
 const mealsContainer = document.getElementById("meals-container");
 const detailsContainer = document.getElementById("details");
-const notFoundText = document.getElementById("not-found");
+const unavailable = document.getElementById("unavailable");
 
 function searchBtn() {
   let searchItemValue = searchItem.value;
   if (searchItemValue == "") {
-    alert("You have to write something");
+    alert("Plz write something");
     return false;
   }
 
@@ -20,7 +20,7 @@ function searchBtn() {
   fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchItemValue}`)
   .then((res) => res.json())
   .then((data) => {
-    validate(data);
+    check(data);
 
     data.meals.forEach((meal) => {
       let domStr = `<img src="${meal.strMealThumb}"><h3>${meal.strMeal}</h3>`;
@@ -57,13 +57,13 @@ const getDetails = (meal) => {
     });
 };
 
-const validate = (data) => {
+const check = (data) => {
   console.log(data);
   if (data.meals == null) {
-    notFoundText.style.display = "block";
+    unavailable.style.display = "block";
   }
     else {
-      notFoundText.style.display = "none";
+      unavailable.style.display = "none";
     };
 };
 
