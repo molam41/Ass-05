@@ -1,69 +1,65 @@
-const searchItem = document.getElementById("searchedFood");
-const mealsContainer = document.getElementById("meals-container");
-const detailsContainer = document.getElementById("details");
-const unavailable = document.getElementById("unavailable");
 
-function searchBtn() {
-  let searchItemValue = searchItem.value;
-  if (searchItemValue == "") {
-    alert("Plz write something");
-    return false;
-  }
-
-  if (detailsContainer.hasChildNodes()) {
-    detailsContainer.innerHTML = "";
-  }
-  if (mealsContainer.hasChildNodes()) {
-    mealsContainer.innerHTML = "";
-  }
-
-  fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchItemValue}`)
-  .then((res) => res.json())
-  .then((data) => {
-    check(data);
-
-    data.meals.forEach((meal) => {
-      let domStr = `<img src="${meal.strMealThumb}"><h3>${meal.strMeal}</h3>`;
-      const singleMeal = document.createElement("div");
-      singleMeal.classList.add("single-meal");
-      singleMeal.innerHTML = domStr;
-      mealsContainer.prepend(singleMeal);
-      searchItem.value = "";
-      singleMeal.addEventListener("click", function () {
-        getDetails(meal);
-      });
-    });
-  });
+function searchFood(){
+  const inputText = document.getElementById("inputText").value
+  fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${inputText}`)
+  .then(res => res.json())
+  .then(data => {
+    searchMeal(data.meals);
+  })
 }
 
+const searchMeal = meals =>{
 
-const getDetails = (meal) => {
-  let mealName = meal.strMeal;
-  fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`)
-    .then((res) => res.json())
-    .then((data) => {
-      let allDetails = `<img src="${data.meals[0].strMealThumb}"> <h3>${data.meals[0].strMeal}</h3><h4>Ingredients</h4>`;
-      detailsContainer.innerHTML = allDetails;
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      for (const [key, value] of Object.entries(data.meals[0])) {
-        for (let i = 1; i < 25; i++) {
-          if (key === `strIngredient${i}` && value !== "" && value !== null) {
-            let li = document.createElement("li");
-            li.innerText = `${value}`;
-            detailsContainer.appendChild(li);
+  const allMeals = document.getElementById('meals')
+  const individualItemToRemove = document.getElementById('individualItem')
+  allMeals.innerHTML = ""
+  individualItemToRemove.innerHTML = ""
+
+  if(meals != null){
+    meals.forEach(meal => {
+      const mealIngradient = []
+      const mealKeys = Object.keys(meal);
+      let i = 1;
+      var requiredMealKey;
+
+      mealKeys.forEach(mealKey =>{
+        if(mealKey.slice(0, 13) == "strIngredient"){
+          requiredMealKey = 'strIngredient' + i++;
+          if (meal[requiredMealKey] != "") {
+          mealIngradient.push(meal[requiredMealKey]);           
           }
         }
-      }
-    });
-};
+      })
 
-const check = (data) => {
-  console.log(data);
-  if (data.meals == null) {
-    unavailable.style.display = "block";
+      allMeals.innerHTML = allMeals.innerHTML + ` 
+      <div class="food-details" onclick="displayIndividualItemDetails('${meal.strMeal}', '${meal.strMealThumb}', '${mealIngradient}')">
+        <img src="${meal.strMealThumb}" alt="" />
+        <h3>${meal.strMeal}</h3>
+      </div>
+      `
+    });   
+  } else {
+    alert("There is no such food available here.")
   }
-    else {
-      unavailable.style.display = "none";
-    };
-};
 
+}
+
+const displayIndividualItemDetails = (mealName, mealImage, mealIngradient) => {
+  const individualItem = document.getElementById('individualItem')
+  let ul = document.createElement('ul');
+  const mealIngradientArray = mealIngradient.split(",")
+
+  mealIngradientArray.forEach(Ingradient =>{
+    let li = document.createElement('li');
+    li.innerText = Ingradient;
+    ul.appendChild(li);
+  })
+  individualItem.innerHTML = ` 
+    <div class="food-details">
+      <img src="${mealImage}" alt="" />
+      <h3>${mealName}</h3>
+      <h2>Ingredients</h2>
+      </div>
+    ` 
+    individualItem.appendChild(ul)
+}

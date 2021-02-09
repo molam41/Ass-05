@@ -1,39 +1,32 @@
-.search-container{
+body{
   text-align: center;
-  padding:20px;
 }
-.search-container p{
-  display: none;
-  color:tomato;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-#meals-container{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
+#meals{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 30px;
-  text-align: center;
-  padding:30px;
 }
 
-#meals-container img{
-  width: 100%;
-}
-.single-meal{
-  background:white;
-  cursor: pointer;
+.food-details{
+  text-align: center;
 }
 
-#details{
-  display:flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
+.food-details img{
+  width: 400px;
 }
-#details li{
+
+#inputText{
+  width: 40%;
+  padding: 12px 20px;
+  margin: 20px;
+  box-sizing: border-box;
+ }
+ button{
+  padding: 12px 20px;
+ }
+
+ #individualItem ul{
   list-style: none;
-}
-#details img{
-  width:200px;
-  border:10px solid white;
-}
+  text-align: center;
+  font-size: 18px;
+ }
